@@ -7,21 +7,25 @@
 .global reset_handler
 
 
+// Vector table
 .type vtable, %object
 vtable:
     .word _estack
     .word reset_handler
 .size vtable, .-vtable
 
+
+
 .type reset_handler, %function
 reset_handler:
+    // Set stack pointer
     LDR  r0, =_estack
     MOV  sp, r0
 
     LDR  r7, =0xDEADBEEF
-    MOVS r0, #0
-    main_loop:
-        ADDS r0, r0, #1
-        B    main_loop
+    MOV r0, #0
+    loop:
+        ADD r0, #1
+        B loop
 
 .size reset_handler, .-reset_handler
