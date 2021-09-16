@@ -1,3 +1,9 @@
+
+######################
+#  Made by MrZloHex  #
+#     16.09.2021     #
+######################
+
 TARGET = main
 
 LD_SCRIPT = stm32f1.ld
