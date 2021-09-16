@@ -19,7 +19,9 @@ vtable:
 .type reset_handler, %function
 reset_handler:
 	NOP
-	reset_registers:
+	MOV r0, r1
+	NOP
+	reset_reg:
 		MOV r0, #0
 		MOV r1, #0
 		MOV r2, #0

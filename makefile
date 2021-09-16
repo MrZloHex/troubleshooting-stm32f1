@@ -20,7 +20,7 @@ ST = st-util
 
 DB_INSTR = -ex "target extended-remote :4242" -ex "load" -ex "b loop" -ex "c" -ex "info registers" -ex "c" -ex "info registers" -ex "q" -ex "y"
 
-AS_FLAGS = -c -O0 -mcpu=$(MCU_SPEC) -mthumb -Wall
+AS_FLAGS = -c -O0 -mcpu=$(MCU_SPEC) -mthumb -Wall -g
 
 LSCRIPT = ./$(LD_SCRIPT)
 L_FLAGS = -mcpu=$(MCU_SPEC) -mthumb -Wall -nostdlib -lgcc -T$(LSCRIPT)
