@@ -17,7 +17,9 @@ $ ./install.sh
 
 4. Run program for testing
 ```sh
-# ./test_stm32.sh [DEVICE ID]
+$ ./test_stm32.sh [DEVICE ID]
 ```
 
 5. Copy folder for trasmiting to us
+
+# Complex instruction
