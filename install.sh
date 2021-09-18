@@ -10,9 +10,9 @@ PACKAGE_LIST=(python3 make git gcc-arm-none-eabi binutils-arm-none-eabi gdb-mult
 
 
 install_packages() {
-	for package in ${PACKAGE_LIST_DEB[@]}
+	for package in ${PACKAGE_LIST[@]}
 	do
-		sudo $PACK_MAN install $package
+		sudo apt install $package
 	done
 	sudo ln -s /usr/bin/gdb-multiarch /usr/bin/arm-none-eabi-gdb
 }
