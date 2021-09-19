@@ -5,6 +5,7 @@
 ######################
 
 TARGET = main
+RAM = sram
 
 LD_SCRIPT = stm32f1.ld
 MCU_SPEC  = cortex-m3
@@ -24,11 +25,14 @@ L_FLAGS = -mcpu=$(MCU_SPEC) -mthumb -Wall -nostdlib -lgcc -T$(LSCRIPT)
 SCR_FOL = ./src/
 
 AS_SRC = main.S
+RAM_SRC = sram.S
+
 
 OBJS = $(AS_SRC:.S=.o)
+RAM_O = $(RAM_SRC:.S=.o)
 
 .PHONY: all
-all: $(TARGET).bin
+all: $(TARGET).bin $(RAM).bin
 
 %.o: %.S
 	$(CC) -x assembler-with-cpp $(AS_FLAGS) $< -o $@
@@ -43,9 +47,19 @@ $(TARGET).bin: $(TARGET).elf
 	$(OC) -S -O binary $< $@
 	$(OS) $<
 
+$(RAM).elf: $(RAM_O)
+	$(CC) $^ $(L_FLAGS) -o $@
+
+$(RAM).bin: $(RAM).elf
+	$(OC) -S -O binary $< $@
+	$(OS) $<
 
 .PHONY: clean
 clean:
 	rm -f $(OBJS)
 	rm -f $(TARGET).elf
+	rm -f $(TARGET).bin
+	rm -f $(RAM_O)
+	rm -f $(RAM).elf
+	rm -f $(RAM).bin
 

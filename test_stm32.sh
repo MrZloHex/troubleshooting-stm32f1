@@ -183,6 +183,44 @@ copy_dumps() {
 	echo >&6 -e "\t\t\t\t\t${OK}OK${NOR}"
 }
 
+testing_sram() {
+	echo >&6 -n "Testing SRAM"
+
+	load &
+	LOAD_PID=$!
+
+	st-util &
+	STLINK_PID=$!
+
+	arm-none-eabi-gdb --command=gdb/sram_test.gdb sram.elf > ./results/device_$ID/test_mem/flash_gdb
+	GDB=$?
+
+	kill $LOAD_PID
+	if [ $GDB -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Failed to get last statement"
+		exit 255
+	fi
+
+	mv test_sram.dump ./results/device_$ID/test_mem/
+	SR=$?
+
+	sleep 1
+
+	kill $PID
+	if [ $SR -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Failed to collect data"
+		exit 255
+	fi
+
+	echo >&6 -e "\t\t\t${OK}OK${NOR}"
+
+	kill $STLINK_PID
+}
+
 main() {
 	exec 6>&1 > /dev/null
 	exec 2> /dev/null
@@ -190,6 +228,7 @@ main() {
 	ID=$1
 	mkdir "./results/device_$ID"
 	mkdir "./results/device_$ID/last_state"
+	mkdir "./results/device_$ID/test_mem"
 
 
 	compile
@@ -197,6 +236,7 @@ main() {
 	get_last_statement
 	debug
 	copy_dumps
+	testing_sram
 
 	exit 0
 }
