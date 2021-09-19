@@ -7,6 +7,10 @@
 
 ID=0
 
+OK='\033[0;32m'
+ERR='\033[0;31m'
+NOR='\033[0m'
+
 load() {
 	while [ 1 ]
 	do
@@ -27,11 +31,11 @@ compile() {
 	
 	kill $PID
 
-	echo >&6
 	if [ "$BUILD_STATUS" -eq 0 ]
 	then
-		echo >&6 "OK"
+		echo >&6 -e "\t\t\t\t\t\t${OK}OK${NOR}"
 	else
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
 		echo >&6 "FAILED TO BUILD"
 		exit 255
 	fi
@@ -44,7 +48,7 @@ write_board_info() {
 }
 
 check_for_board() {
-	echo >&6 -n "Searching for STM32F1"
+	echo >&6 -n "Connecting to STM32F1"
 	load &
 	LOAD_PID=$!
 
@@ -52,14 +56,13 @@ check_for_board() {
 	PID=$!
 	sleep 5
 	kill $PID
-	
-	echo >&6
 
 	kill $LOAD_PID
 	
 	INFO=$(cat ./device_$ID/trace | grep RAM)
 	if [ -z $INFO ]
 	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
 		echo >&6 "Can't find device"
 		exit 255
 	fi
@@ -75,24 +78,68 @@ check_for_board() {
 	CHIP_ID=$(st-info --chipid)
 
 	write_board_info $CHIP_ID $RAM $FLASH
-}
 
-startup_stlink() {
-	st-util
+	echo >&6 -e "\t\t\t\t\t${OK}OK${NOR}"
 }
 
 debug() {
-	startup_stlink &
+	echo >&6 -n "Setting ST-LINK server"
+	
+	load &
+	LOAD_PID=$!
+
+	st-util &
 	STLINK_PID=$!
 
+	sleep 2
+	kill $LOAD_PID
+	echo >&6 -e "\t\t\t\t\t${OK}OK${NOR}"
+
+
+	echo >&6 -n "Testing device"
+
+	load &
+	LOAD_PID=$!
+
 	arm-none-eabi-gdb --command=gdb.commands main.elf > ./device_$ID/test_output
+	GDB=$?
+
+	kill $LOAD_PID
+	if [ $GDB -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Failed to debug device"
+		exit 255
+	fi
 	
-	kill STLINK_PID
+	
+	echo >&6 -e "\t\t\t\t${OK}OK${NOR}"
+
+	kill $STLINK_PID
 }
 
 copy_dumps() {
+	echo >&6 -n "Collecting debug info"
+
+	load &
+	PID=$!
+
 	mv flash.dump ./device_$ID/
+	FL=$?
 	mv sram.dump ./device_$ID/
+	SR=$?
+
+	sleep 1
+
+	kill $PID
+	if [ $FL -ne 0 ] && [ $SR -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Info unavailable"
+		exit 255
+	fi
+
+	echo >&6 -e "\t\t\t\t\t${OK}OK${NOR}"
 }
 
 main() {
@@ -105,8 +152,10 @@ main() {
 
 	compile
 	check_for_board
-	#debug
-	#copy_dumps
+	debug
+	copy_dumps
+
+	exit 0
 }
 
 main "$@"
