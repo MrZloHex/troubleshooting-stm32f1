@@ -42,9 +42,9 @@ compile() {
 }
 
 write_board_info() {
-	echo "Chip ID: $1" > ./device_$ID/board_info
-	echo "SRAM: $2" >> ./device_$ID/board_info
-	echo "FLASH: $3" >> ./device_$ID/board_info
+	echo "Chip ID: $1" > ./results/device_$ID/board_info
+	echo "SRAM: $2" >> ./results/device_$ID/board_info
+	echo "FLASH: $3" >> ./results/device_$ID/board_info
 }
 
 check_for_board() {
@@ -52,14 +52,15 @@ check_for_board() {
 	load &
 	LOAD_PID=$!
 
-	st-util > ./device_$ID/trace 2>&1 &
+	st-util > trace 2>&1 &
 	PID=$!
 	sleep 5
 	kill $PID
 
 	kill $LOAD_PID
 	
-	INFO=$(cat ./device_$ID/trace | grep RAM)
+	INFO=$(cat trace | grep RAM)
+	rm trace
 	if [ -z $INFO ]
 	then
 		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
@@ -101,7 +102,7 @@ debug() {
 	load &
 	LOAD_PID=$!
 
-	arm-none-eabi-gdb --command=gdb.commands main.elf > ./device_$ID/test_output
+	arm-none-eabi-gdb --command=gdb.commands main.elf > ./results/device_$ID/test_output
 	GDB=$?
 
 	kill $LOAD_PID
@@ -124,9 +125,9 @@ copy_dumps() {
 	load &
 	PID=$!
 
-	mv flash.dump ./device_$ID/
+	mv flash.dump ./results/device_$ID/
 	FL=$?
-	mv sram.dump ./device_$ID/
+	mv sram.dump ./results/device_$ID/
 	SR=$?
 
 	sleep 1
@@ -147,7 +148,7 @@ main() {
 	exec 2> /dev/null
 
 	ID=$1
-	mkdir "device_$ID"
+	mkdir "./results/device_$ID"
 
 
 	compile

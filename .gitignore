@@ -4,3 +4,4 @@
 *.dump
 .vscode/
 gt.sh
+results/
