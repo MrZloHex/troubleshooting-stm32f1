@@ -50,7 +50,7 @@ check_for_board() {
 
 	st-util > ./device_$ID/trace 2>&1 &
 	PID=$!
-	sleep 10
+	sleep 5
 	kill $PID
 	
 	echo >&6
@@ -66,15 +66,13 @@ check_for_board() {
 	IFS=":"
 	read -a SPLIT_INFO <<< "$INFO"
 	INFO=${SPLIT_INFO[4]}
-	echo >&6 $INFO
 	
 	IFS=","
 	read -a MEM <<< "$INFO"
-	RAM=${MEM[0]}
-	FLASH=${MEM[1]}
+	RAM=$(echo ${MEM[0]} | sed -re 's/^.{1}//; s/KiB.*/KiB/')
+	FLASH=$(echo ${MEM[1]} | sed -re 's/^.{1}//; s/KiB.*/KiB/')
 
 	CHIP_ID=$(st-info --chipid)
-	echo >&6 $CHIP_ID
 
 	write_board_info $CHIP_ID $RAM $FLASH
 }
