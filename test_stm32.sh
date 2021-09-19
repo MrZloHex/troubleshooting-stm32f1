@@ -83,6 +83,46 @@ check_for_board() {
 	echo >&6 -e "\t\t\t\t\t${OK}OK${NOR}"
 }
 
+get_last_statement() {
+	echo >&6 -n "Collecting last statement"
+
+	load &
+	LOAD_PID=$!
+
+	st-util &
+	STLINK_PID=$!
+
+	arm-none-eabi-gdb --command=gdb/last_state.gdb > ./results/device_$ID/last_state/statement
+	GDB=$?
+
+	kill $LOAD_PID
+	if [ $GDB -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Failed to get last statement"
+		exit 255
+	fi
+
+	mv last_flash.dump ./results/device_$ID/last_state/
+	FL=$?
+	mv last_sram.dump ./results/device_$ID/last_state/
+	SR=$?
+
+	sleep 1
+
+	kill $PID
+	if [ $FL -ne 0 ] && [ $SR -ne 0 ]
+	then
+		echo >&6 -e "\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "Failed to collect data"
+		exit 255
+	fi
+
+	echo >&6 -e "\t\t\t${OK}OK${NOR}"
+
+	kill $STLINK_PID
+}
+
 debug() {
 	echo >&6 -n "Setting ST-LINK server"
 	
@@ -102,7 +142,7 @@ debug() {
 	load &
 	LOAD_PID=$!
 
-	arm-none-eabi-gdb --command=gdb.commands main.elf > ./results/device_$ID/test_output
+	arm-none-eabi-gdb --command=gdb/test_commands.gdb main.elf > ./results/device_$ID/test_output
 	GDB=$?
 
 	kill $LOAD_PID
@@ -149,10 +189,12 @@ main() {
 
 	ID=$1
 	mkdir "./results/device_$ID"
+	mkdir "./results/device_$ID/last_state"
 
 
 	compile
 	check_for_board
+	get_last_statement
 	debug
 	copy_dumps
 
