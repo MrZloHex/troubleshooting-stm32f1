@@ -216,9 +216,59 @@ testing_sram() {
 		exit 255
 	fi
 
-	echo >&6 -e "\t\t\t${OK}OK${NOR}"
+	echo >&6 -e "\t\t\t\t\t\t${OK}OK${NOR}"
 
 	kill $STLINK_PID
+}
+
+check_sram() {
+	echo >&6 -n "Checking SRAM"
+	
+	load &
+	LOAD_PID=$!
+
+	i=0
+	hexdump results/device_$ID/test_mem/test_sram.dump > check_sram
+	while IFS= read -r line
+	do
+		if [ $i -eq 0 ]
+		then
+			if [ "$line" = "0000000 beaf dead beaf dead beaf dead beaf dead" ]
+			then
+				correct1=1
+			else
+				correct1=0
+			fi
+		elif [ $i -eq 1 ]
+		then
+			if [[ "$line" == "*" ]]
+			then
+				correct2=1
+			else
+				correct2=0
+			fi
+		elif [ $i -eq 2 ]
+		then
+			if [[ "$line" == "0010000" ]]
+			then
+				correct3=1
+			else
+				correct3=0
+			fi
+		fi
+		((i=i+1))
+	done < check_sram
+	rm check_sram
+
+	kill $LOAD_PID
+	if [ $correct1 -ne 1 ] || [ $correct2 -ne 1 ] || [ $correct3 -ne 1 ]
+	then
+		echo >&6 -e "\t\t\t\t\t\t\t${ERR}ERROR${NOR}"
+		echo >&6 "SRAM is corupted"
+		exit 255
+	fi
+
+	echo >&6 -e "\t\t\t\t\t\t\t${OK}OK${NOR}"
 }
 
 main() {
@@ -237,6 +287,7 @@ main() {
 	debug
 	copy_dumps
 	testing_sram
+	check_sram
 
 	exit 0
 }

@@ -22,12 +22,12 @@ reset_handler:
 	MOV  sp, r0
 	LDR r1, =0xDEADBEAF
     LDR r2, =0x20000000
-    LDR r3, =0x20010004
+    LDR r3, =0x2001000F
     loop:
-        STR r1, [r2]
-        ADD r2, #4
+	PUSH {r1}
         CMP r2, r3
         BEQ quit
+        ADD r2, #4
         B loop
     quit:
         B quit
