@@ -63,6 +63,9 @@ Directory `device_<ID>` will have next content:
 
 All this information is parsed from stm32 without rewriting and rebooting it. This can help to detect what happened with proccesor.
 
+3. __test_output__ has debug information after running main test, so firstly check this, if it is like is needful - all is ok with stm32
+
+
 
 
 
