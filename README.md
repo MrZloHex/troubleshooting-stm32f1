@@ -63,10 +63,27 @@ Directory `device_<ID>` will have next content:
 
 All this information is parsed from stm32 without rewriting and rebooting it. This can help to detect what happened with proccesor.
 
-3. __test_output__ has debug information after running main test, so firstly check this, if it is like is needful - all is ok with stm32
-
-
-
+3. __test_output__ has debug information after running main test, so firstly check this, if it is like is needful - all is ok with stm32.</br>
+Last dump of registers should be like that and no other way:
+```
+r0             0x8000008           134217736
+r1             0xbeafdead          3199196845
+r2             0x4608bf00          1174978304
+r3             0x5                 5
+r4             0x0                 0
+r5             0x0                 0
+r6             0x0                 0
+r7             0xdeadbeef          3735928559
+r8             0x0                 0
+r9             0x0                 0
+r10            0x0                 0
+r11            0x0                 0
+r12            0x0                 0
+sp             0x20010000          0x20010000
+lr             0x0                 0
+pc             0x800006a           0x800006a <reset_handler+98>
+```
+For a full see this []
 
 
 
