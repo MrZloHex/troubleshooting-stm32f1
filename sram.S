@@ -25,9 +25,8 @@ reset_handler:
     LDR r3, =0x2001000F
     loop:
 	PUSH {r1}
-        CMP r2, r3
+        CMP r2, sp
         BEQ quit
-        ADD r2, #4
         B loop
     quit:
         B quit

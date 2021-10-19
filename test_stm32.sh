@@ -43,7 +43,7 @@ compile() {
 
 write_board_info() {
 	echo "Chip ID: $1" > ./results/device_$ID/board_info
-	echo "SRAM: $2" >> ./results/device_$ID/board_info
+	echo "SRAM: $2)" >> ./results/device_$ID/board_info
 	echo "FLASH: $3" >> ./results/device_$ID/board_info
 }
 
@@ -276,6 +276,7 @@ main() {
 	exec 2> /dev/null
 
 	ID=$1
+	mkdir "./results"
 	mkdir "./results/device_$ID"
 	mkdir "./results/device_$ID/last_state"
 	mkdir "./results/device_$ID/test_mem"
