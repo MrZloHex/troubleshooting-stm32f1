@@ -49,6 +49,11 @@ Directory `device_<ID>` will have next content:
 └── test_output
 ```
 
+## Purpose of file and directories
 
+1. __BOARD_INFO__ has main info about stm32 on your board like:
+ - Chip ID
+ - Volume of SRAM and its start address
+ - Type of flash in stm32
 
 # Complex instruction
