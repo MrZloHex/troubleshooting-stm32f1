@@ -85,6 +85,6 @@ pc             0x800006a           0x800006a <reset_handler+98>
 ```
 For a full see this []
 
-
+4. __flash.dump__ and __sram.dump__ is memory dumps after main test. You can check to check if it all like it should be (opcodes in `flash` and state of stack in `sram`)
 
 # Complex instruction
