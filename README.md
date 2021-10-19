@@ -51,9 +51,18 @@ Directory `device_<ID>` will have next content:
 
 ## Purpose of file and directories
 
-1. __BOARD_INFO__ has main info about stm32 on your board like:
+1. __board_info__ has main info about stm32 on your board like:
  - Chip ID
  - Volume of SRAM and its start address
  - Type of flash in stm32
+
+2. __last_state__ it's a directory with statement of:
+ - _flash_ of stm32 which is dumped to `last_flash.dump`
+ - _sram_ of stm32 which is dumped to `last_sram.dump`
+ - _registers_ of stm32 which values are dumped to `statement`
+
+All this information is parsed from stm32 without rewriting and rebooting it. This can help to detect what happened with proccesor.
+
+
 
 # Complex instruction
