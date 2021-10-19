@@ -24,11 +24,21 @@ $ ./test_stm32.sh [DEVICE ID]
 
 # Results
 
-In repo directory after running tests, will be created subdirectory `results` with one more directory with name `device_<ID>`, where `<ID>` is a number which you specifed by passing it at running tests.</br>
+In repo directory after running tests, will be created subdirectory `results` with one more directory with name `device_<ID>`, where `<ID>` is a number which you specifed by passing it at running tests.</br></br>
 E.g.: running like this
 `
 $ /test-stm32.sh 34
 `
 would create directory with name `device_34`.
+</br>
+
+
+Directory `device_<ID>` will have next content:
+ - dir `last-state`
+ - dir `test_mem`
+ - txf `board_info`
+ - txf `test_output`
+ - hxf `flash.dump`
+ - hxf `sram.dump`
 
 # Complex instruction
