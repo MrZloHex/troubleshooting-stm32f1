@@ -49,6 +49,14 @@ Directory `device_<ID>` will have next content:
 └── test_output
 ```
 
+## Order of tests
+
+ 1. Dumping last statement without any changing of state of stm32
+ 2. Main test with checking operability of:
+   - Main node of instruction execution
+   - Writting/reading in/from `sram`
+   - Work this ALU and _stack_ operations
+
 ## Purpose of file and directories
 
 1. __board_info__ has main info about stm32 on your board like:
