@@ -34,11 +34,21 @@ would create directory with name `device_34`.
 
 
 Directory `device_<ID>` will have next content:
- - dir `last-state`
- - dir `test_mem`
- - txf `board_info`
- - txf `test_output`
- - hxf `flash.dump`
- - hxf `sram.dump`
+```bash
+.
+├── board_info
+├── flash.dump
+├── last_state
+│   ├── last_flash.dump
+│   ├── last_sram.dump
+│   └── statement
+├── sram.dump
+├── test_mem
+│   ├── flash_gdb
+│   └── test_sram.dump
+└── test_output
+```
+
+
 
 # Complex instruction
