@@ -60,8 +60,7 @@ Directory `device_<ID>` will have next content:
  - _flash_ of stm32 which is dumped to `last_flash.dump`
  - _sram_ of stm32 which is dumped to `last_sram.dump`
  - _registers_ of stm32 which values are dumped to `statement`
-
-All this information is parsed from stm32 without rewriting and rebooting it. This can help to detect what happened with proccesor.
+ All this information is parsed from stm32 without rewriting and rebooting it. This can help to detect what happened with proccesor.
 
 
 
