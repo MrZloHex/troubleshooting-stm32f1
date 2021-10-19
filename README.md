@@ -24,10 +24,11 @@ $ ./test_stm32.sh [DEVICE ID]
 
 # Results
 
-In repo directory after running tests, will be created subdirectory `results` with one more directory with name `device_<ID>`, where `<ID>` is a number which you specifed by passing it at running tests. E.g.: running like this
-```bash
+In repo directory after running tests, will be created subdirectory `results` with one more directory with name `device_<ID>`, where `<ID>` is a number which you specifed by passing it at running tests.</br>
+E.g.: running like this
+`
 $ /test-stm32.sh 34
-```
+`
 would create directory with name `device_34`.
 
 # Complex instruction
