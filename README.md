@@ -56,6 +56,7 @@ Directory `device_<ID>` will have next content:
    - Main node of instruction execution
    - Writting/reading in/from `sram`
    - Work this ALU and _stack_ operations
+ 3. Checking all `sram` addresses for broken segments
 
 ## Purpose of file and directories
 
@@ -96,3 +97,5 @@ For a full see this []
 4. __flash.dump__ and __sram.dump__ is memory dumps after main test. You can check to check if it all like it should be (opcodes in `flash` and state of stack in `sram`)
 
 # Complex instruction
+
+## Test Output
